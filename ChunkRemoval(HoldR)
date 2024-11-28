@@ -6,7 +6,7 @@ local storedRegions = {}
 -- function to delete terrain and store data
 local function deleteTerrain()
     -- define the size of the terrain chunk to be cleared
-    local regionSize = Vector3.new(18, 18, 18) -- adjust this as needed
+    local regionSize = Vector3.new(26, 18, 18) -- adjust this as needed
 
     -- calculate the region to clear based on mouse hit position
     if not Mouse.Target then return end
