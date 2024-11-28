@@ -1,0 +1,102 @@
+-- Best one yet!
+
+local a=game:GetService("Players")
+local b=game:GetService("RunService")
+local c=workspace.CurrentCamera
+local d=a.LocalPlayer
+local e={}
+
+local f={
+	{partName = "Body", partSize = Vector3.new(2.5, 6.25, 2.5), espLabel = "Totem", espColor = Color3.new(0, 1, 0)},
+
+	{partName = "Body", partSize = Vector3.new(3.1873292922973633, 7.803071022033691, 5.988575458526611), espLabel = "Advanced Workbench", espColor = Color3.new(0.000000, 0.000000, 0.000000)},
+
+	{partName = "Crates", partSize = Vector3.new(5.803810119628906, 2.7799904346466064, 5.775084972381592), espLabel = "Airdrop", espColor = Color3.new(1.000000, 0.098039, 0.000000)},
+
+	{partName = "Prim", partSize = Vector3.new(3, 0.25, 3), espLabel = "Spawn", espColor = Color3.new(0.000000, 0.478431, 0.866667)},
+
+	{partName = "Bottom", partSize = Vector3.new(2.9763996601104736, 2.150311231613159, 6.314671516418457), espLabel = "MilitaryCrate", espColor = Color3.new(0.043137, 0.611765, 0.090196)},
+
+	{partName = "Body", partSize = Vector3.new(2.6330080032348633, 2.401916265487671, 2.733165740966797), espLabel = "LootMetalBox", espColor = Color3.new(0.325490, 0.317647, 0.317647)},
+
+    {partName="Hitbox", partSize=Vector3.new(4.5,6.75,2.25), espLabel="Cabin", espColor=Color3.new(1,0,0)},
+
+	{partName = "Prim", partSize = Vector3.new(1.8424512147903442, 3.0965967178344727, 0.9474747776985168), espLabel = "Gas", espColor = Color3.new(1.000000, 0.098039, 0.000000)},
+
+{partName = "Part", partSize = Vector3.new(7.785902500152588, 6.1331400871276855, 8.119043350219727), espLabel = "Stone", espColor = Color3.new(0.325490, 0.317647, 0.317647)},
+    
+    {partName="Plastics2", partSize=Vector3.new(5.546261787414551, 1.9555978775024414, 3.854473352432251), espLabel="ATV", espColor=Color3.new(1.000000, 0.000000, 0.000000)}
+
+}
+
+local g=Instance.new("ScreenGui",d.PlayerGui)
+g.Name="ESP"
+
+local function h(i,j,k)
+    k=k or 0.001
+    return math.abs(i.X-j.X)<=k and math.abs(i.Y-j.Y)<=k and math.abs(i.Z-j.Z)<=k
+end
+
+local function l(m,n,k)
+    if not n then return true end
+    k=k or 0.01
+    return math.abs(m.R-n.R)<=k and math.abs(m.G-n.G)<=k and math.abs(m.B-n.B)<=k
+end
+
+local function o(p,q,r)
+    local s=Instance.new("TextLabel",g)
+    s.BackgroundTransparency=1
+    s.TextScaled=true
+    s.Font=Enum.Font.SourceSans
+    s.TextColor3=r
+    s.Text=q
+    s.Size=UDim2.new(0,100,0,25)
+    s.Visible=true
+    s.TextScaled=false
+    s.TextSize=18
+    e[p]={textLabel=s,target=p,label=q,color=r}
+end
+
+local function t(p)
+    if e[p] then e[p].textLabel:Destroy() e[p]=nil end
+end
+
+local function u(v)
+    for w,x in ipairs(f) do
+        if v:IsA("BasePart")and v.Name==x.partName and h(v.Size,x.partSize)and l(v.Color,x.partColor) then 
+            o(v,x.espLabel,x.espColor)
+            return
+        end
+    end
+end
+
+local function y(v)
+    u(v)
+end
+
+local function z(v)
+    t(v)
+end
+
+workspace.DescendantAdded:Connect(y)
+workspace.DescendantRemoving:Connect(z)
+
+local function A()
+    for p,B in pairs(e) do
+        if p and p:IsDescendantOf(workspace) then
+            local C,D=c:WorldToViewportPoint(p.Position)
+            B.textLabel.Position=UDim2.new(0,C.X-B.textLabel.Size.X.Offset/2,0,C.Y-B.textLabel.Size.Y.Offset/2)
+            B.textLabel.Visible=D
+            local E=(c.CFrame.Position-p.Position).Magnitude
+            B.textLabel.Text=string.format("%s (%d)", B.label, math.round(E))
+        else
+            t(p)
+        end
+    end
+end
+
+b.RenderStepped:Connect(A)
+
+for w,v in ipairs(workspace:GetDescendants()) do
+    u(v)
+end
