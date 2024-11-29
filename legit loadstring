@@ -1,4 +1,10 @@
--- Official Script | Added Swimhub
+--[[
+How to avoid ban:
+1. Don't use Silent aim or any aimbot.
+2. Don't use recoil mods
+3. Avoid killing players
+
+]]
 local scripts = {
     'https://raw.githubusercontent.com/NotH4xor/trident/main/legit%20shortneck',
     'https://raw.githubusercontent.com/NotH4xor/trident/main/LegitESP',
