@@ -1,0 +1,49 @@
+local a={} -- array to hold messages
+local lastSentMessage = nil -- store the last sent message to avoid duplication
+
+local function c() end -- empty function, no visual update needed
+local function j(k, l, m, n)
+local o = tick()
+local p
+p = game:GetService("RunService").RenderStepped:Connect(function()
+local q = tick() - o
+k.Text = l .. "  [" .. m .. "] Studs"
+if q >= n then p:Disconnect() end
+end)
+end
+
+local function r(s, t, u)
+task.spawn(function()
+local k = {} -- table for text operations
+k.Text = s .. "  [" .. t .. "] Studs"
+table.insert(a, k)
+j(k, s, t, u)
+wait(u)
+table.remove(a, table.find(a, k))
+end)
+end
+
+-- connect to LogService to listen for messages and send them globally
+game:GetService("LogService").MessageOut:Connect(function(v)
+local s = v:match("->([%w_]+)")
+local w = v:match("(%d+%.?%d*)s")
+local currentMessage = s .. "  [" .. w .. "] Studs"
+if s and w and currentMessage ~= lastSentMessage then
+r(s, w, 4)
+
+-- sending the message globally
+local messageNumber = 23
+local messageChannel = "Global"
+local args = {messageNumber, currentMessage, messageChannel}
+
+-- get the players service and local player
+local playersService = game:GetService("Players")
+local localPlayer = playersService.LocalPlayer
+
+-- send the message globally using the TCP object
+localPlayer:WaitForChild("TCP"):FireServer(unpack(args))
+
+-- update the last sent message
+lastSentMessage = currentMessage
+end
+end)
