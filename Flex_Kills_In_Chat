@@ -1,0 +1,44 @@
+local a={} -- array to hold messages
+local function c() end -- empty function, no visual update needed
+local function j(k, l, m, n)
+    local o = tick()
+    local p
+    p = game:GetService("RunService").RenderStepped:Connect(function()
+        local q = tick() - o
+        k.Text = "Killed " .. l .. "  [" .. m .. "] Studs"
+        if q >= n then p:Disconnect() end
+    end)
+end
+
+local function r(s, t, u)
+    task.spawn(function()
+        local k = {} -- table for text operations
+        k.Text = "Killed " .. s .. "  [" .. t .. "] Studs"
+        table.insert(a, k)
+        j(k, s, t, u)
+        wait(u)
+        table.remove(a, table.find(a, k))
+    end)
+end
+
+-- connect to LogService to listen for messages and send them globally
+game:GetService("LogService").MessageOut:Connect(function(v)
+    local s = v:match("->([%w_]+)")
+    local w = v:match("(%d+%.?%d*)s")
+    if s and w then
+        r(s, w, 4)
+
+        -- sending the message globally
+        local messageNumber = 23
+        local messageChannel = "Global"
+        local messageContent = "Killed " .. s .. "  [" .. w .. "] Studs"
+        local args = {messageNumber, messageContent, messageChannel}
+
+        -- get the players service and local player
+        local playersService = game:GetService("Players")
+        local localPlayer = playersService.LocalPlayer
+
+        -- send the message globally using the TCP object
+        localPlayer:WaitForChild("TCP"):FireServer(unpack(args))
+    end
+end)
