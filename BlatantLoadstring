@@ -10,6 +10,7 @@ local scripts = {
     'https://raw.githubusercontent.com/1337h4xx/1/main/RGB%20Notification',
     'https://raw.githubusercontent.com/mainstreamed/amongus-hook/main/mainloader.lua',
     'https://raw.githubusercontent.com/1337h4xx/1/main/Deletion',
+    'https://raw.githubusercontent.com/NotH4xor/trident/main/SayKills_InChat_2.0',
 }
 
 -- Function to create and resume a coroutine for each script
