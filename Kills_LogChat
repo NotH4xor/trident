@@ -9,7 +9,7 @@ local i = tick()
 local j
 j = game:GetService("RunService").RenderStepped:Connect(function()
 local k = tick() - i
-e.Text = "Killed " .. f .. "  [" .. g .. "m] "
+e.Text = "Killed " .. f .. "  [" .. g .. "s] "
 if k >= h then j:Disconnect() end
 end)
 end
@@ -17,7 +17,7 @@ end
 local function l(m, n, o)
 task.spawn(function()
 local e = {}
-e.Text = "Killed " .. m .. "  [" .. n .. "m] "
+e.Text = "Killed " .. m .. "  [" .. n .. "s] "
 table.insert(a, e)
 d(e, m, n, o)
 wait(o)
@@ -28,7 +28,7 @@ end
 game:GetService("LogService").MessageOut:Connect(function(p)
 local m = p:match("->([%w_]+)")
 local q = p:match("(%d+%.?%d*)s")
-local r = "Killed " .. m .. "  [" .. q .. "m] "
+local r = "Killed " .. m .. "  [" .. q .. "s] "
 if m and q and r ~= b and m ~= lastName then
 l(m, q, 4)
 b = r
