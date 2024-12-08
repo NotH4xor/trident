@@ -1,0 +1,120 @@
+local a=game:GetService("UserInputService")
+local b=game:GetService("RunService")
+local c=workspace.CurrentCamera
+local d=game:GetService("Players")
+local e=d.LocalPlayer
+
+local f=Enum.KeyCode.Z
+local g=150
+local h=math.rad(5)
+local deceleration = 1 -- introduce deceleration factor
+local i=false
+local j={}
+local k={}
+local l={
+  {partName="Plastics",partSize=Vector3.new(7.551962852478027,2.7462241649627686,4.972546577453613)},
+  {partName="BackLeftRim",partSize=Vector3.new(1.067999005317688, 1.067999005317688, 0.7230425477027893)},
+  {partName="BackLeftW",partSize=Vector3.new(2.1518802642822266, 2.1898412704467773, 0.9632723927497864)},
+  {partName="BackRightRim",partSize=Vector3.new(1.067999005317688, 1.067999005317688, 0.7230425477027893)},
+  {partName="BackRightW",partSize=Vector3.new(2.1518802642822266, 2.1898412704467773, 0.9632723927497864)},
+  {partName="Frame",partSize=Vector3.new(6.972168922424316, 2.774535655975342, 5.0449066162109375)},
+  {partName="FrontLeftRim",partSize=Vector3.new(1.067999005317688, 1.067999005317688, 0.7230425477027893)},
+  {partName="FrontLeftW",partSize=Vector3.new(2.1518802642822266, 2.1898412704467773, 0.7132723927497864)},
+  {partName="FrontRightRim",partSize=Vector3.new(1.067999005317688, 1.067999005317688, 0.7230425477027893)},
+  {partName="FrontRightW",partSize=Vector3.new(2.1518802642822266, 2.1898412704467773, 0.7132723927497864)},
+  {partName="Grip",partSize=Vector3.new(0.5733855366706848, 0.9605950117111206, 2.1716928482055664)},
+  {partName="HandleBars",partSize=Vector3.new(0.448628693819046, 1.376966953277588, 2.0683438777923584)},
+  {partName="Plastics2",partSize=Vector3.new(5.546261787414551, 1.9555978775024414, 3.854473352432251)},
+  {partName="Seat",partSize=Vector3.new(4.404223442077637, 1.439717411994934, 2.2254559993743896)},
+  {partName="LeftBackWH",partSize=Vector3.new(0.625, 0.625, 0.125)},
+  {partName="LeftFrontWH",partSize=Vector3.new(0.625, 0.625, 0.125)},
+  {partName="RightBackWH",partSize=Vector3.new(0.625, 0.625, 0.125)},
+  {partName="RightFrontWH",partSize=Vector3.new(0.625, 0.625, 0.125)}
+}
+
+local function m(n,o,p)
+    p=p or 0.001
+    return math.abs(n.X-o.X)<=p and math.abs(n.Y-o.Y)<=p and math.abs(n.Z-o.Z)<=p
+end
+
+local function q(r)
+    for s,t in ipairs(l) do 
+        if r:IsA("BasePart") and r.Name==t.partName and m(r.Size,t.partSize) then
+            return true
+        end
+    end
+    return false
+end
+
+local function u(v)
+    return Vector3.new(v.X,0,v.Z).unit*v.magnitude
+end
+
+local function w(r)
+    local x = Vector3.new(0,0,0)
+    local y = CFrame.new()
+    if not a:GetFocusedTextBox() and i then
+        if a:IsKeyDown(Enum.KeyCode.W) then x=x+u(c.CFrame.LookVector)*g end
+        if a:IsKeyDown(Enum.KeyCode.A) then x=x-u(c.CFrame.RightVector)*g end
+        if a:IsKeyDown(Enum.KeyCode.S) then x=x-u(c.CFrame.LookVector)*g end
+        if a:IsKeyDown(Enum.KeyCode.D) then x=x+u(c.CFrame.RightVector)*g end
+        if a:IsKeyDown(Enum.KeyCode.F) then x=x+Vector3.new(0,g,0) end
+        if a:IsKeyDown(Enum.KeyCode.V) then x=x-Vector3.new(0,g,0) end
+        if a:IsKeyDown(Enum.KeyCode.Q) then y = y*CFrame.Angles(0,-h,0) end
+        if a:IsKeyDown(Enum.KeyCode.E) then y = y*CFrame.Angles(0,h,0) end
+        if a:IsKeyDown(Enum.KeyCode.R) then y = y*CFrame.Angles(h,0,0) end
+        if a:IsKeyDown(Enum.KeyCode.T) then y = y*CFrame.Angles(-h,0,0) end
+
+        local z = r.Position
+        local A = r.Orientation
+        r.CFrame = CFrame.new(z) * y
+        r.CFrame = CFrame.new(z) * CFrame.Angles(0,math.rad(A.Y),0)
+        
+        -- apply deceleration when no keys are pressed
+        if x.Magnitude == 0 then
+            r.Velocity = r.Velocity * deceleration
+        else
+            r.Velocity = x
+        end
+    else
+        r.Velocity = r.Velocity * deceleration -- decelerate smoothly
+        if r.Velocity.Magnitude < 1 then -- small threshold for stopping
+            r.Velocity = Vector3.new() -- completely stop
+        end
+        r.RotVelocity = Vector3.new()
+    end
+end
+
+a.InputBegan:Connect(function(B,C)
+    if C then return end
+    if B.KeyCode==f then
+        i = not i
+        if i then
+            for s,r in ipairs(k) do
+                r.Anchored=false
+                local D = b.Heartbeat:Connect(function() w(r) end)
+                table.insert(j,D)
+            end
+        else
+            for s,D in ipairs(j) do D:Disconnect() end
+            j = {}
+        end
+    end
+end)
+
+workspace.DescendantAdded:Connect(function(E)
+    if q(E) then table.insert(k,E) end
+end)
+
+workspace.DescendantRemoving:Connect(function(E)
+    for F,r in ipairs(k) do
+        if r==E then
+            table.remove(k,F)
+            break
+        end
+    end
+end)
+
+for s,E in ipairs(workspace:GetDescendants()) do
+    if q(E) then table.insert(k,E) end
+end
