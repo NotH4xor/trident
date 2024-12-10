@@ -1,43 +1,42 @@
 local a = {}
 local b = nil
-local lastName = nil
-
-local function c() end
-
-local function d(e, f, g, h)
-local i = tick()
-local j
-j = game:GetService("RunService").RenderStepped:Connect(function()
-local k = tick() - i
-e.Text = "Killed " .. f .. "  [" .. g .. "s] "
-if k >= h then j:Disconnect() end
-end)
+local c = nil
+local function d() end
+local function e(f,g,h,i)
+    local j = tick()
+    local k
+    k=game:GetService("RunService").RenderStepped:Connect(function()
+        local l = tick() - j
+        f.Text = "Killed " .. g .. "  [" .. h .. "s] "
+        if l >= i then 
+            k:Disconnect()
+        end
+    end)
 end
-
-local function l(m, n, o)
-task.spawn(function()
-local e = {}
-e.Text = "Killed " .. m .. "  [" .. n .. "s] "
-table.insert(a, e)
-d(e, m, n, o)
-wait(o)
-table.remove(a, table.find(a, e))
-end)
+local function m(n,o,p)
+    task.spawn(function()
+        local f = {}
+        f.Text = "Killed " .. n .. "  [" .. o .. "s] "
+        table.insert(a, f)
+        e(f, n, o, p)
+        wait(p)
+        table.remove(a, table.find(a, f))
+    end)
 end
-
-game:GetService("LogService").MessageOut:Connect(function(p)
-local m = p:match("->([%w_]+)")
-local q = p:match("(%d+%.?%d*)s")
-local r = "Killed " .. m .. "  [" .. q .. "s] "
-if m and q and r ~= b and m ~= lastName then
-l(m, q, 4)
-b = r
-lastName = m
-local s = 23
-local t = "Global"
-local u = {s, r, t}
-local v = game:GetService("Players")
-local w = v.LocalPlayer
-w:WaitForChild("TCP"):FireServer(unpack(u))
-end
+game:GetService("LogService").MessageOut:Connect(function(q)
+    local localPlayerName = game.Players.LocalPlayer.Name
+    local n = q:match("->([%w_]+)")
+    local r = q:match("(%d+%.?%d*)s")
+    local s = "Killed " .. n .. "  [" .. r .. "s] "
+    if n and r and s ~= b and n ~= c and n ~= localPlayerName then
+        m(n, r, 4)
+        b = s
+        c = n
+        local t = 23
+        local u = "Global"
+        local v = {t, s, u}
+        local w = game:GetService("Players")
+        local x = w.LocalPlayer
+        x:WaitForChild("TCP"):FireServer(unpack(v))
+    end
 end)
