@@ -1,3 +1,8 @@
+# Verified Server
+```
+
+```
+
 # Blatant
 ```
 loadstring(game:HttpGet('https://raw.githubusercontent.com/NotH4xor/trident/main/BlatantLoadstring'))()
