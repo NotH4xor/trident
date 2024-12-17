@@ -1,11 +1,32 @@
 -- List of admin user IDs
 local adminIDs = {
-30888938, -- ZCOLINZ (The Owner)
-24291721, -- yerja
-856955432, -- Ben (Dev Role in group )
-28715944, -- Guppy (Dev Role in group )
-295255058, -- Finn ( Dev Role in group )
-336666561 -- ZNILOCZ ( Owners Alt )
+
+-----------Head Moderators-----------(2)
+1301649807, -- TopIncognito [HR MOD]
+470568310, -- HoneyBree_T [HR MOD]
+
+-----------Moderators-----------(5)
+303008331, -- alesko12345 [MOD]
+470568310, -- Jaxxzyyy [MOD]
+299133654, -- DovydasTEDS [MOD]
+542318462, -- pokediner12 [MOD]
+383469839, -- nedkinger [MOD]
+
+-----------JR DEVELOPER-----------(1)
+41313278, -- leporus [JR DEVELOPER]
+
+-----------CO OWNER-----------(3)
+31974897, -- imnotaguestimaboyy [CO OWNER]
+7157227443, -- TridentSniper0 [CO OWNER]
+24977621, -- AlphaByteDev [CO OWNER]
+
+
+-----------OWNER-----------
+4561105558, -- The2AnOnly [OWNER]
+
+-----------GROUP HOLDER-----------
+6073198178 -- SkullTridentHolder [GROUP HOLDER]
+
 }
 
 -- Convert the adminIDs array to a dictionary for O(1) lookups
