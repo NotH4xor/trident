@@ -4,7 +4,6 @@ local adminIDs = {
 -----------Head Moderators-----------(2)
 1301649807, -- TopIncognito [HR MOD]
 470568310, -- HoneyBree_T [HR MOD]
-
 -----------Moderators-----------(5)
 303008331, -- alesko12345 [MOD]
 470568310, -- Jaxxzyyy [MOD]
@@ -26,7 +25,6 @@ local adminIDs = {
 
 -----------GROUP HOLDER-----------
 6073198178 -- SkullTridentHolder [GROUP HOLDER]
-
 }
 
 -- Convert the adminIDs array to a dictionary for O(1) lookups
