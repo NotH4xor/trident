@@ -1,6 +1,6 @@
-# Verified Server
+# Verified Servers Only
 ```
-
+loadstring(game:HttpGet('https://raw.githubusercontent.com/NotH4xor/trident/main/Verified'))()
 ```
 
 # Blatant
