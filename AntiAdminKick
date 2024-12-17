@@ -1,0 +1,53 @@
+-- List of admin user IDs
+local adminIDs = {
+30888938, -- ZCOLINZ (The Owner)
+24291721, -- yerja
+856955432, -- Ben (Dev Role in group )
+28715944, -- Guppy (Dev Role in group )
+295255058, -- Finn ( Dev Role in group )
+336666561 -- ZNILOCZ ( Owners Alt )
+}
+
+-- Convert the adminIDs array to a dictionary for O(1) lookups
+local adminDict = {}
+for _, id in ipairs(adminIDs) do
+adminDict[id] = true
+end
+
+-- Get the Players service and LocalPlayer reference
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+-- Debounce to prevent redundant kicks
+local hasChecked = false
+
+-- Function to kick player if an admin is detected
+local function detectAndKick()
+if hasChecked then return end
+for _, player in pairs(Players:GetPlayers()) do
+if adminDict[player.UserId] then
+localPlayer:Kick("Admin Joined")
+hasChecked = true
+return
+end
+end
+end
+
+-- Initial check on all players in the game
+detectAndKick()
+
+-- Continuous check for new players joining
+Players.PlayerAdded:Connect(function(player)
+if adminDict[player.UserId] then
+localPlayer:Kick("Admin Joined")
+hasChecked = true
+end
+end)
+
+-- Periodic checks for admins using Heartbeat
+RunService.Heartbeat:Connect(function()
+if not hasChecked then
+detectAndKick()
+end
+end)
