@@ -24,7 +24,13 @@ local adminIDs = {
 4561105558, -- The2AnOnly [OWNER]
 
 -----------GROUP HOLDER-----------
-6073198178 -- SkullTridentHolder [GROUP HOLDER]
+6073198178, -- SkullTridentHolder [GROUP HOLDER]
+
+------------UKNOWN ADMIN ALTS-----------------
+7591973155 -- BatmanSavedTheCIty1
+
+
+
 }
 
 -- Convert the adminIDs array to a dictionary for O(1) lookups
