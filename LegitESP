@@ -1,101 +1,91 @@
---[[
-Totem
-Advanced
-Airdrop
-Cabin
-Gas
-ATV
-]]
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+local espObjects = {}
 
-local a=game:GetService("Players")
-local b=game:GetService("RunService")
-local c=workspace.CurrentCamera
-local d=a.LocalPlayer
-local e={}
-
-local f={
+-- Define ESP configurations
+local espConfig = {
 	{partName = "Body", partSize = Vector3.new(2.5, 6.25, 2.5), espLabel = "Totem", espColor = Color3.new(0, 1, 0)},
-
-	{partName = "Body", partSize = Vector3.new(3.1873292922973633, 7.803071022033691, 5.988575458526611), espLabel = "Advanced", espColor = Color3.new(0.000000, 0.000000, 0.000000)},
-
+ 
+	{partName = "Body", partSize = Vector3.new(3.1873292922973633, 7.803071022033691, 5.988575458526611), espLabel = "Advance", espColor = Color3.new(0.000000, 0.000000, 0.000000)},
+ 
 	{partName = "Crates", partSize = Vector3.new(5.803810119628906, 2.7799904346466064, 5.775084972381592), espLabel = "Airdrop", espColor = Color3.new(1.000000, 0.098039, 0.000000)},
-
-	{partName="Hitbox", partSize=Vector3.new(4.5,6.75,2.25), espLabel="Cabin", espColor=Color3.new(1,0,0)},
-
-	{partName = "Prim", partSize = Vector3.new(1.8424512147903442, 3.0965967178344727, 0.9474747776985168), espLabel = "Gas", espColor = Color3.new(1.000000, 0.098039, 0.000000)},
-    
-	{partName="Plastics2", partSize=Vector3.new(5.546261787414551, 1.9555978775024414, 3.854473352432251), espLabel="ATV", espColor=Color3.new(1.000000, 0.000000, 0.000000)}
-
+ 
+	{partName = "Bottom", partSize = Vector3.new(2.9763996601104736, 2.150311231613159, 6.314671516418457), espLabel = "MilitaryCrate", espColor = Color3.new(0.043137, 0.611765, 0.090196)},
+ 
+    {partName="Hitbox", partSize=Vector3.new(4.5,6.75,2.25), espLabel="Cabin", espColor=Color3.new(1,0,0)},
+ 
+    {partName="Plastics2", partSize=Vector3.new(5.546261787414551, 1.9555978775024414, 3.854473352432251), espLabel="ATV", espColor=Color3.new(1.000000, 0.000000, 0.000000)}
 }
 
-local g=Instance.new("ScreenGui",d.PlayerGui)
-g.Name="ESP"
-
-local function h(i,j,k)
-    k=k or 0.001
-    return math.abs(i.X-j.X)<=k and math.abs(i.Y-j.Y)<=k and math.abs(i.Z-j.Z)<=k
+-- Helper function to check if two vectors are approximately equal
+local function isVector3Close(v1, v2, tolerance)
+    tolerance = tolerance or 0.01
+    return math.abs(v1.X - v2.X) <= tolerance and math.abs(v1.Y - v2.Y) <= tolerance and math.abs(v1.Z - v2.Z) <= tolerance
 end
 
-local function l(m,n,k)
-    if not n then return true end
-    k=k or 0.01
-    return math.abs(m.R-n.R)<=k and math.abs(m.G-n.G)<=k and math.abs(m.B-n.B)<=k
+-- Function to create or update a drawing ESP
+local function createOrUpdateESP(part, label, color)
+    if not espObjects[part] then
+        local drawing = Drawing.new("Text")
+        drawing.Size = 20
+        drawing.Center = true
+        drawing.Outline = true
+        drawing.OutlineColor = Color3.new(0, 0, 0)
+        drawing.Color = color
+        drawing.Visible = true
+        espObjects[part] = drawing
+    end
+    espObjects[part].Text = label
 end
 
-local function o(p,q,r)
-    local s=Instance.new("TextLabel",g)
-    s.BackgroundTransparency=1
-    s.TextScaled=true
-    s.Font=Enum.Font.SourceSans
-    s.TextColor3=r
-    s.Text=q
-    s.Size=UDim2.new(0,100,0,25)
-    s.Visible=true
-    s.TextScaled=false
-    s.TextSize=18
-    e[p]={textLabel=s,target=p,label=q,color=r}
-end
-
-local function t(p)
-    if e[p] then e[p].textLabel:Destroy() e[p]=nil end
-end
-
-local function u(v)
-    for w,x in ipairs(f) do
-        if v:IsA("BasePart")and v.Name==x.partName and h(v.Size,x.partSize)and l(v.Color,x.partColor) then 
-            o(v,x.espLabel,x.espColor)
-            return
-        end
+-- Function to remove an ESP
+local function removeESP(part)
+    if espObjects[part] then
+        espObjects[part]:Remove()
+        espObjects[part] = nil
     end
 end
 
-local function y(v)
-    u(v)
-end
-
-local function z(v)
-    t(v)
-end
-
-workspace.DescendantAdded:Connect(y)
-workspace.DescendantRemoving:Connect(z)
-
-local function A()
-    for p,B in pairs(e) do
-        if p and p:IsDescendantOf(workspace) then
-            local C,D=c:WorldToViewportPoint(p.Position)
-            B.textLabel.Position=UDim2.new(0,C.X-B.textLabel.Size.X.Offset/2,0,C.Y-B.textLabel.Size.Y.Offset/2)
-            B.textLabel.Visible=D
-            local E=(c.CFrame.Position-p.Position).Magnitude
-            B.textLabel.Text=string.format("%s (%d)", B.label, math.round(E))
+-- Function to update ESP positions each frame
+local function updateESP()
+    for part, drawing in pairs(espObjects) do
+        if part and part:IsDescendantOf(workspace) then
+            local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+            if onScreen then
+                drawing.Position = Vector2.new(screenPos.X, screenPos.Y)
+                drawing.Visible = true
+            else
+                drawing.Visible = false
+            end
         else
-            t(p)
+            removeESP(part)
         end
     end
 end
 
-b.RenderStepped:Connect(A)
+-- Connect events
+workspace.DescendantAdded:Connect(function(descendant)
+    for _, config in ipairs(espConfig) do
+        if descendant:IsA("BasePart") and descendant.Name == config.partName and isVector3Close(descendant.Size, config.partSize) then
+            createOrUpdateESP(descendant, config.espLabel, config.espColor)
+        end
+    end
+end)
 
-for w,v in ipairs(workspace:GetDescendants()) do
-    u(v)
+workspace.DescendantRemoving:Connect(function(descendant)
+    removeESP(descendant)
+end)
+
+-- Initial population of ESPs
+for _, descendant in ipairs(workspace:GetDescendants()) do
+    for _, config in ipairs(espConfig) do
+        if descendant:IsA("BasePart") and descendant.Name == config.partName and isVector3Close(descendant.Size, config.partSize) then
+            createOrUpdateESP(descendant, config.espLabel, config.espColor)
+        end
+    end
 end
+
+-- Update ESPs every frame
+RunService.RenderStepped:Connect(updateESP)
