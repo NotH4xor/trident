@@ -10,13 +10,7 @@ local espConfig = {
  
 	{partName = "Body", partSize = Vector3.new(3.1873292922973633, 7.803071022033691, 5.988575458526611), espLabel = "Advance", espColor = Color3.new(0.000000, 0.000000, 0.000000)},
  
-	{partName = "Crates", partSize = Vector3.new(5.803810119628906, 2.7799904346466064, 5.775084972381592), espLabel = "Airdrop", espColor = Color3.new(1.000000, 0.098039, 0.000000)},
- 
-	{partName = "Bottom", partSize = Vector3.new(2.9763996601104736, 2.150311231613159, 6.314671516418457), espLabel = "MilitaryCrate", espColor = Color3.new(0.043137, 0.611765, 0.090196)},
- 
-    {partName="Hitbox", partSize=Vector3.new(4.5,6.75,2.25), espLabel="Cabin", espColor=Color3.new(1,0,0)},
- 
-    {partName="Plastics2", partSize=Vector3.new(5.546261787414551, 1.9555978775024414, 3.854473352432251), espLabel="ATV", espColor=Color3.new(1.000000, 0.000000, 0.000000)}
+	{partName="Plastics2", partSize=Vector3.new(5.546261787414551, 1.9555978775024414, 3.854473352432251), espLabel="ATV", espColor=Color3.new(1.000000, 0.000000, 0.000000)}
 }
 
 -- Helper function to check if two vectors are approximately equal
