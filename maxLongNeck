@@ -1,5 +1,7 @@
---//8.93 MAX Longneck
-local longneck = { LongNeckEnabled = false, UpperLimitDefault = 8.93, LowerLimitDefault = 8.93, }
+--[[
+Now works any number except you can't use amongushook.
+]]
+local longneck = { LongNeckEnabled = false, UpperLimitDefault = 7.7, LowerLimitDefault = 7.7, }
 local keybind = 'V'
 local function toggleLongNeck()
     longneck.LongNeckEnabled = not longneck.LongNeckEnabled
