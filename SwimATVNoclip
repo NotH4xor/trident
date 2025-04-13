@@ -1,0 +1,65 @@
+print("Loaded")
+-- Проверка загрузки игры
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+-- Проверка наличия необходимых сервисов
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+-- Проверка наличия библиотеки LinoriaLib
+local success, Library = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/Library.lua"))()
+end)
+
+if not success or not Library then
+    warn("Failed to load LinoriaLib")
+    return
+end
+
+-- Создаем новое окно для управления ATV
+local ATVWindow = Library:CreateWindow("ATV Controls")
+
+-- Добавляем вкладку для функций ATV
+local ATVTab = ATVWindow:AddTab("ATV")
+
+-- Функция для переключения коллизий ATV
+local collisionToggle = false
+local ClosestATV = nil
+
+local function GetClosestATV()
+    local closestATV, closestDistance = nil, math.huge
+
+    for _, v in ipairs(Workspace:GetChildren()) do
+        if v:FindFirstChild("Seat") and v:FindFirstChild("Plastics") then
+            local distance = (v.Plastics.Position - Workspace.Const.Ignore.LocalCharacter.Middle.Position).Magnitude
+            if distance < closestDistance then
+                closestATV = v
+                closestDistance = distance
+            end
+        end
+    end
+
+    return closestATV
+end
+
+local function toggleATVCollision()
+    if not ClosestATV then return end
+
+    collisionToggle = not collisionToggle
+    for _, part in ipairs(ClosestATV:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = collisionToggle
+        end
+    end
+end
+
+-- Добавляем кнопку для переключения коллизий ATV
+ATVTab:AddLeftGroupbox("ATV Collision"):AddButton("Toggle ATV Collision", function()
+    ClosestATV = GetClosestATV()
+    toggleATVCollision()
+end)
