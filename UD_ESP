@@ -93,7 +93,7 @@ end
 
 e.InputBegan:Connect(function(T, U)
     if not U then
-        if T.KeyCode == Enum.KeyCode.P then -- Toggle key for drawings
+        if T.KeyCode == Enum.KeyCode.L then -- Toggle key for drawings
             drawingsEnabled = not drawingsEnabled
             if not drawingsEnabled then
                 for _, w in pairs(g) do
